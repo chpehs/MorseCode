@@ -10,4 +10,5 @@ All of the code in MorseCodePawn.h and MorseCodePawn.cpp
 Widget Blueprint:
 
 ![Documentation](https://user-images.githubusercontent.com/78034801/190930176-0e7fcb9f-396b-44a4-838e-7e8bad004ec0.png)
+
 P.S. I messed up a timer a bit
