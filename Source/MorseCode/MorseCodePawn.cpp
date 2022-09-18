@@ -100,10 +100,10 @@ void AMorseCodePawn::PlayMorseCode()
 {
     //go through each character of the morse code string
     for (int i = 0; i < MorseCodeString.Len(); i++)
-    {  
+    {
         //get the current character
         CurrentChar = MorseCodeString.Mid(i, 1);
-        
+
         //if the current character is a dot
         if (CurrentChar == ".")
         {
@@ -111,7 +111,7 @@ void AMorseCodePawn::PlayMorseCode()
             FlashLightOn();
 
             //wait for the dot delay time
-            GetWorldTimerManager().SetTimer(DotDelayTimer, this, &AMorseCodePawn::FlashLightOff, DotDelayTime, false, 0);
+            GetWorldTimerManager().SetTimer(DotDelayTimer, this, &AMorseCodePawn::FlashLightOff, DotDelayTime, false, 0.2f);
             PointLight->SetLightColor(FLinearColor::Red);
 
             UE_LOG(LogTemp, Warning, TEXT("is dot"));
@@ -125,7 +125,7 @@ void AMorseCodePawn::PlayMorseCode()
             FlashLightOn();
 
             //wait for the dash delay time
-            GetWorldTimerManager().SetTimer(DashDelayTimer, this, &AMorseCodePawn::FlashLightOff, DashDelayTime, false, 0);
+            GetWorldTimerManager().SetTimer(DashDelayTimer, this, &AMorseCodePawn::FlashLightOff, DashDelayTime, false, 0.7f);
             PointLight->SetLightColor(FLinearColor::Blue);
 
 
@@ -140,7 +140,7 @@ void AMorseCodePawn::PlayMorseCode()
                 FlashLightOff();
 
                 //wait for the space delay time
-                GetWorldTimerManager().SetTimer(LongPauseTimer, this, &AMorseCodePawn::FlashLightOff, LongPause, false, 0);
+                GetWorldTimerManager().SetTimer(LongPauseTimer, this, &AMorseCodePawn::FlashLightOff, LongPause, false, 1.0f);
 
                 UE_LOG(LogTemp, Warning, TEXT("long Pause"));
 
