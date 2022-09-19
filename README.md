@@ -1,4 +1,4 @@
-# MorseCode
+# Morse code translator
   There are a few ways to do this, but the easiest is to create an array of strings, where each string represents a letter in the alphabet.
 To translate a word into Morse code, you simply need to look up each letter in the array and concatenate the corresponding string.
   To play the Morse code, you will need to use a loop to iterate over each character in the translated string. 
