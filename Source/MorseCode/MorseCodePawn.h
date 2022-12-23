@@ -10,7 +10,6 @@
 #include "CoreMinimal.h"
 #include "MorseCodePawn.generated.h"
 
-
 USTRUCT(BlueprintType)
 struct FMorseCodeCharacter
 {
@@ -18,6 +17,7 @@ struct FMorseCodeCharacter
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morse Code")
 		FString Character;
+	//char MorseChar = (char)Character[0];
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morse Code")
 		FString Code;
@@ -55,6 +55,7 @@ public:
 	//Current Morse Character
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morse String")
 		FString CurrentChar;
+	//char MorseChar = (char)CurrentChar[0];
 
 	//a string to store a user input
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Morse String")
@@ -68,45 +69,46 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Input Conversion")
 		void ConvertInputToMorseCode();
 
-	//Array of MorseCodeCharacters
+	//Map of MorseCodeCharacters
+	//char is not a recognized type for UPROPERTY
 	UPROPERTY(EditFixedSize, BlueprintReadOnly, Category = "Morse Code Translation")
-		TArray<FMorseCodeCharacter> MorseCodeCharacters = {
-		{"A", ".-"},
-		{"B", "-..."},
-		{"C", "-.-."},
-		{"D", "-.."},
-		{"E", "."},
-		{"F", "..-."},
-		{"G", "--."},
-		{"H", "...."},
-		{"I", ".."},
-		{"J", ".---"},
-		{"K", "-.-"},
-		{"L", ".-.."},
-		{"M", "--"},
-		{"N", "-."},
-		{"O", "---"},
-		{"P", ".--."},
-		{"Q", "--.-"},
-		{"R", ".-."},
-		{"S", "..."},
-		{"T", "-"},
-		{"U", "..-"},
-		{"V", "...-"},
-		{"W", ".--"},
-		{"X", "-..-"},
-		{"Y", "-.--"},
-		{"Z", "--.."},
-		{"0", "-----"},
-		{"1", ".----"},
-		{"2", "..---"},
-		{"3", "...--"},
-		{"4", "....-"},
-		{"5", "....."},
-		{"6", "-...."},
-		{"7", "--..."},
-		{"8", "---.."},
-		{"9", "----."}
+		TMap<FString, FString> MorseCodeCharacters = {
+		  {"A", ".-"},
+		  {"B", "-..."},
+		  {"C", "-.-."},
+		  {"D", "-.."},
+		  {"E", "."},
+		  {"F", "..-."},
+		  {"G", "--."},
+		  {"H", "...."},
+		  {"I", ".."},
+		  {"J", ".---"},
+		  {"K", "-.-"},
+		  {"L", ".-.."},
+		  {"M", "--"},
+		  {"N", "-."},
+		  {"O", "---"},
+		  {"P", ".--."},
+		  {"Q", "--.-"},
+		  {"R", ".-."},
+		  {"S", "..."},
+		  {"T", "-"},
+		  {"U", "..-"},
+		  {"V", "...-"},
+		  {"W", ".--"},
+		  {"X", "-..-"},
+		  {"Y", "-.--"},
+		  {"Z", "--.."},
+		  {"0", "-----"},
+		  {"1", ".----"},
+		  {"2", "..---"},
+		  {"3", "...--"},
+		  {"4", "....-"},
+		  {"5", "....."},
+		  {"6", "-...."},
+		  {"7", "--..."},
+		  {"8", "---.."},
+		  {"9", "----."}
 	};
 
 

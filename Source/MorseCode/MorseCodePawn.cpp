@@ -46,44 +46,30 @@ void AMorseCodePawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 //This function converting user input to a morse code
 //loops through each character in the input string, converts it to upper case, and then looks for it in the MorseCodeCharacters array
-void AMorseCodePawn::ConvertInputToMorseCode() 
+void AMorseCodePawn::ConvertInputToMorseCode()
 {
-
     // Loop through each character of the input string
     for (int32 i = 0; i < InputString.Len(); i++)
     {
         // convert the current character to upper case
         CurrentChar = InputString.Mid(i, 1).ToUpper();
-        
-        // look for the character in the MorseCodeCharacters array
-        for (int32 j = 0; j < MorseCodeCharacters.Num(); j++)
+
+        // look for the character in the MorseCodeCharacters TMap
+        FString* MorseCode = MorseCodeCharacters.Find(CurrentChar);
+        if (MorseCode != nullptr)
         {
-            // if the current character is found in the array
-            if (CurrentChar == MorseCodeCharacters[j].Character)
-            {
-                // add the morse code equivalent of the character to the MorseCodeString
-                MorseCodeString += MorseCodeCharacters[j].Code + "\n";
-
-                // break out of the loop
-                break;
-            }
-
-            // If the current character is a space, add a space to the morse code string
-            if (CurrentChar == " ")
-            {
-                MorseCodeString += " ";
-            }
-
-             //if the current character is not found in the array
-            else if (j == MorseCodeCharacters.Num() - 1)
-            {
-                // add "Character Not Found" to the MorseCodeString
-                MorseCodeString += "Character Not Found";
-            }
-            
+            // if the character is found, add the corresponding Morse code to the MorseCodeString
+            MorseCodeString += *MorseCode /*+ "\n"*/;
         }
-
+        else
+        {
+            // if the character is not found, add "Character Not Found" to the MorseCodeString
+            MorseCodeString += "Character Not Found";
+        }
     }
+
+    // Set the text of the TextRender component to the generated mor
+
 
     // Set the text of the TextRender component to the generated morse code string
     TextRenderer->SetText(FText::FromString(MorseCodeString));
@@ -99,58 +85,56 @@ void AMorseCodePawn::ConvertInputToMorseCode()
 void AMorseCodePawn::PlayMorseCode()
 {
     //go through each character of the morse code string
-    for (int i = 0; i < MorseCodeString.Len(); i++)
-    {
-        //get the current character
-        CurrentChar = MorseCodeString.Mid(i, 1);
-
-        //if the current character is a dot
-        if (CurrentChar == ".")
+   for (int i = 0; i < MorseCodeString.Len(); i++)
         {
-            //turn the light on right away
-            FlashLightOn();
+            //get the current character
+            CurrentChar = MorseCodeString.Mid(i, 1);
 
-            //wait for the dot delay time
-            GetWorldTimerManager().SetTimer(DotDelayTimer, this, &AMorseCodePawn::FlashLightOff, DotDelayTime, false, 0.2f);
-            PointLight->SetLightColor(FLinearColor::Red);
+            //if the current character is a dot
+            if (CurrentChar == ".")
+            {
+                //turn the light on right away
+                FlashLightOn();
 
-            UE_LOG(LogTemp, Warning, TEXT("is dot"));
-        }
+                //set a timer delegate function to turn the light off after the dot delay time
+                FTimerDelegate DotTimerDelegate = FTimerDelegate::CreateUObject(this, &AMorseCodePawn::FlashLightOff);
+                GetWorldTimerManager().SetTimer(DotDelayTimer, DotTimerDelegate, DotDelayTime, false, 0.2f);
+                PointLight->SetLightColor(FLinearColor::Red);
+            }
 
+            //if the current character is a dash
+            else if (CurrentChar == "-")
+            {
+                //turn the light on right away
+                FlashLightOn();
 
-        //if the current character is a dash
-        else if (CurrentChar == "-")
-        {
-            //turn the light on right away
-            FlashLightOn();
+                //set a timer delegate function to turn the light off after the dash delay time
+                FTimerDelegate DashTimerDelegate = FTimerDelegate::CreateUObject(this, &AMorseCodePawn::FlashLightOff);
+                GetWorldTimerManager().SetTimer(DashDelayTimer, DashTimerDelegate, DashDelayTime, false, 0.7f);
+                PointLight->SetLightColor(FLinearColor::Blue);
+            }
 
-            //wait for the dash delay time
-            GetWorldTimerManager().SetTimer(DashDelayTimer, this, &AMorseCodePawn::FlashLightOff, DashDelayTime, false, 0.7f);
-            PointLight->SetLightColor(FLinearColor::Blue);
-
-
-            UE_LOG(LogTemp, Warning, TEXT("is dash"));
-        }
-
-        //if the long pause if character is a space
-        else if (CurrentChar == " ")
-        {
-
+            //if the current character is a space
+            else if (CurrentChar == " ")
+            {
                 //turn the light off
                 FlashLightOff();
 
-                //wait for the space delay time
-                GetWorldTimerManager().SetTimer(LongPauseTimer, this, &AMorseCodePawn::FlashLightOff, LongPause, false, 1.0f);
+                //set a timer delegate function to turn the light off after the space delay time
+                FTimerDelegate SpaceTimerDelegate = FTimerDelegate::CreateUObject(this, &AMorseCodePawn::FlashLightOff);
+                GetWorldTimerManager().SetTimer(LongPauseTimer, SpaceTimerDelegate, LongPause, false, 1.0f);
+            }
 
-                UE_LOG(LogTemp, Warning, TEXT("long Pause"));
-
+            //if the current character is "Character Not Found"
+            else if (CurrentChar == "Character Not Found")
+            {
+                //turn the light off
+                FlashLightOff();
+            }
         }
-
-        else if (CurrentChar == "Character Not Found")
-        {
-            FlashLightOff();
-        }
-    }
+   //add a delay after the loop has completed
+   FTimerDelegate SpaceTimerDelegate = FTimerDelegate::CreateUObject(this, &AMorseCodePawn::FlashLightOff);
+   GetWorldTimerManager().SetTimer(LongPauseTimer, SpaceTimerDelegate, LongPause, false, 1.0f);
 
     UE_LOG(LogTemp, Warning, TEXT("The End of the PlayMorse Code, CurrentChar: %s"), *CurrentChar);
 }
